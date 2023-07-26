@@ -1,0 +1,167 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 750px;
+                 background-color: #222222;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+             #config {
+                 float: left;
+                 width: 400px;
+                 height: 600px;
+             }
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+            <div id="config"></div>
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#5a5af2", "font": {"color": "white"}, "id": "Sam Kerr", "label": "Sam Kerr", "shape": "dot", "title": "Sam Kerr\n\nRelationships: \nNikki Stanton\nKristie Mewis"}, {"color": "#5a5af2", "font": {"color": "white"}, "id": "Kristie Mewis", "label": "Kristie Mewis", "shape": "dot", "title": "Kristie Mewis\n\nRelationships: \nRachel Daly\u00a0\nSam Kerr"}, {"color": "#5a5af2", "font": {"color": "white"}, "id": "Pernille Harder", "label": "Pernille Harder", "shape": "dot", "title": "Pernille Harder\n\nRelationships: \nMagdelena Eriksson"}, {"color": "#5a5af2", "font": {"color": "white"}, "id": "Magdelena Eriksson", "label": "Magdelena Eriksson", "shape": "dot", "title": "Magdelena Eriksson\n\nRelationships: \nPernille Harder"}, {"color": "#5a5af2", "font": {"color": "white"}, "id": "Ann-Katrin Berger ", "label": "Ann-Katrin Berger ", "shape": "dot", "title": "Ann-Katrin Berger \n\nRelationships: \nJess Carter"}, {"color": "#5a5af2", "font": {"color": "white"}, "id": "Jess Carter", "label": "Jess Carter", "shape": "dot", "title": "Jess Carter\n\nRelationships: \nAnn-Katrin Berger "}, {"color": "#5a5af2", "font": {"color": "white"}, "id": "Ellie Carpenter", "label": "Ellie Carpenter", "shape": "dot", "title": "Ellie Carpenter\n\nRelationships: \nDanielle van de Donk"}, {"color": "#5a5af2", "font": {"color": "white"}, "id": "Danielle van de Donk", "label": "Danielle van de Donk", "shape": "dot", "title": "Danielle van de Donk\n\nRelationships: \nEllie Carpenter\nBeth Mead"}, {"color": "#5a5af2", "font": {"color": "white"}, "id": "Katie Macabe", "label": "Katie Macabe", "shape": "dot", "title": "Katie Macabe\n\nRelationships: \nCaitlin Foord\nRuesha Littlejohn"}, {"color": "#5a5af2", "font": {"color": "white"}, "id": "Ruesha Littlejohn", "label": "Ruesha Littlejohn", "shape": "dot", "title": "Ruesha Littlejohn\n\nRelationships: \nKatie Macabe"}, {"color": "#5a5af2", "font": {"color": "white"}, "id": "Caitlin Foord", "label": "Caitlin Foord", "shape": "dot", "title": "Caitlin Foord\n\nRelationships: \nKatie Macabe\nLia W\u00e4lti"}, {"color": "#5a5af2", "font": {"color": "white"}, "id": "Lia W\u00e4lti", "label": "Lia W\u00e4lti", "shape": "dot", "title": "Lia W\u00e4lti\n\nRelationships: \nCaitlin Foord"}, {"color": "#5a5af2", "font": {"color": "white"}, "id": "Marta Vieira da Silva", "label": "Marta Vieira da Silva", "shape": "dot", "title": "Marta Vieira da Silva\n\nRelationships: \nCarrie Lawrence\nToni Pressley"}, {"color": "#5a5af2", "font": {"color": "white"}, "id": "Rachel Daly\u00a0", "label": "Rachel Daly\u00a0", "shape": "dot", "title": "Rachel Daly\u00a0\n\nRelationships: \nKristie Mewis\nMillie Turner\u00a0"}, {"color": "#5a5af2", "font": {"color": "white"}, "id": "Bethany England", "label": "Bethany England", "shape": "dot", "title": "Bethany England\n\nRelationships: \nStephanie Williams"}, {"color": "#5a5af2", "font": {"color": "white"}, "id": "Lauren Hemp", "label": "Lauren Hemp", "shape": "dot", "title": "Lauren Hemp\n\nRelationships: \nEllie Butler"}, {"color": "#5a5af2", "font": {"color": "white"}, "id": "D\u00e9bora Cristiane de Oliveira\u00a0", "label": "D\u00e9bora Cristiane de Oliveira\u00a0", "shape": "dot", "title": "D\u00e9bora Cristiane de Oliveira\u00a0\n\nRelationships: \nMeredith Speck"}, {"color": "#5a5af2", "font": {"color": "white"}, "id": "Jordan Nobbs", "label": "Jordan Nobbs", "shape": "dot", "title": "Jordan Nobbs\n\nRelationships: \nLeah Williamson"}, {"color": "#5a5af2", "font": {"color": "white"}, "id": "Keira Walsh", "label": "Keira Walsh", "shape": "dot", "title": "Keira Walsh\n\nRelationships: \nLucy Bronze"}, {"color": "#5a5af2", "font": {"color": "white"}, "id": "Lucy Bronze", "label": "Lucy Bronze", "shape": "dot", "title": "Lucy Bronze\n\nRelationships: \nKeira Walsh"}, {"color": "#5a5af2", "font": {"color": "white"}, "id": "Ingrid Engen ", "label": "Ingrid Engen ", "shape": "dot", "title": "Ingrid Engen \n\nRelationships: \nMarie D\u00f8lvik Markussen\nMar\u00eda Pilar Le\u00f3n"}, {"color": "#5a5af2", "font": {"color": "white"}, "id": "Tamika Yallup", "label": "Tamika Yallup", "shape": "dot", "title": "Tamika Yallup\n\nRelationships: \nKirsty Yallop"}, {"color": "#5a5af2", "font": {"color": "white"}, "id": "Katrina Gorry", "label": "Katrina Gorry", "shape": "dot", "title": "Katrina Gorry\n\nRelationships: \nClara Markstedt"}, {"color": "#5a5af2", "font": {"color": "white"}, "id": "Lucy Quinn", "label": "Lucy Quinn", "shape": "dot", "title": "Lucy Quinn\n\nRelationships: \nRebecca Holloway"}, {"color": "#5a5af2", "font": {"color": "white"}, "id": "Diane Caldwell", "label": "Diane Caldwell", "shape": "dot", "title": "Diane Caldwell\n\nRelationships: \nMona Lohmann"}, {"color": "#5a5af2", "font": {"color": "white"}, "id": "Lina Hurtig", "label": "Lina Hurtig", "shape": "dot", "title": "Lina Hurtig\n\nRelationships: \nLisa Lantz"}, {"color": "#5a5af2", "font": {"color": "white"}, "id": "Jill Roord", "label": "Jill Roord", "shape": "dot", "title": "Jill Roord\n\nRelationships: \nSydney Lohmann"}, {"color": "#5a5af2", "font": {"color": "white"}, "id": "Sydney Lohmann", "label": "Sydney Lohmann", "shape": "dot", "title": "Sydney Lohmann\n\nRelationships: \nJill Roord"}, {"color": "#8f8fbc", "font": {"color": "white"}, "id": "Ali Krieger", "label": "Ali Krieger", "shape": "dot", "title": "Ali Krieger\n\nRelationships: \nAshlyn Harris"}, {"color": "#8f8fbc", "font": {"color": "white"}, "id": "Ashlyn Harris", "label": "Ashlyn Harris", "shape": "dot", "title": "Ashlyn Harris\n\nRelationships: \nAli Krieger"}, {"color": "#8f8fbc", "font": {"color": "white"}, "id": "Vivianne Miedema", "label": "Vivianne Miedema", "shape": "dot", "title": "Vivianne Miedema\n\nRelationships: \nLisa Evans\nBeth Mead"}, {"color": "#8f8fbc", "font": {"color": "white"}, "id": "Lisa Evans", "label": "Lisa Evans", "shape": "dot", "title": "Lisa Evans\n\nRelationships: \nVivianne Miedema"}, {"color": "#8f8fbc", "font": {"color": "white"}, "id": "Beth Mead", "label": "Beth Mead", "shape": "dot", "title": "Beth Mead\n\nRelationships: \nVivianne Miedema\nDanielle van de Donk"}, {"color": "#8f8fbc", "font": {"color": "white"}, "id": "Nikki Stanton", "label": "Nikki Stanton", "shape": "dot", "title": "Nikki Stanton\n\nRelationships: \nSam Kerr"}, {"color": "#8f8fbc", "font": {"color": "white"}, "id": "Toni Pressley", "label": "Toni Pressley", "shape": "dot", "title": "Toni Pressley\n\nRelationships: \nMarta Vieira da Silva"}, {"color": "#8f8fbc", "font": {"color": "white"}, "id": "Millie Turner\u00a0", "label": "Millie Turner\u00a0", "shape": "dot", "title": "Millie Turner\u00a0\n\nRelationships: \nRachel Daly\u00a0"}, {"color": "#8f8fbc", "font": {"color": "white"}, "id": "Stephanie Williams", "label": "Stephanie Williams", "shape": "dot", "title": "Stephanie Williams\n\nRelationships: \nBethany England"}, {"color": "#8f8fbc", "font": {"color": "white"}, "id": "Ellie Butler", "label": "Ellie Butler", "shape": "dot", "title": "Ellie Butler\n\nRelationships: \nLauren Hemp"}, {"color": "#8f8fbc", "font": {"color": "white"}, "id": "Meredith Speck", "label": "Meredith Speck", "shape": "dot", "title": "Meredith Speck\n\nRelationships: \nD\u00e9bora Cristiane de Oliveira\u00a0"}, {"color": "#8f8fbc", "font": {"color": "white"}, "id": "Mar\u00eda Pilar Le\u00f3n", "label": "Mar\u00eda Pilar Le\u00f3n", "shape": "dot", "title": "Mar\u00eda Pilar Le\u00f3n\n\nRelationships: \nIngrid Engen "}, {"color": "#8f8fbc", "font": {"color": "white"}, "id": "Marie D\u00f8lvik Markussen", "label": "Marie D\u00f8lvik Markussen", "shape": "dot", "title": "Marie D\u00f8lvik Markussen\n\nRelationships: \nIngrid Engen "}, {"color": "#8f8fbc", "font": {"color": "white"}, "id": "Kirsty Yallop", "label": "Kirsty Yallop", "shape": "dot", "title": "Kirsty Yallop\n\nRelationships: \nTamika Yallup"}, {"color": "#8f8fbc", "font": {"color": "white"}, "id": "Clara Markstedt", "label": "Clara Markstedt", "shape": "dot", "title": "Clara Markstedt\n\nRelationships: \nKatrina Gorry"}, {"color": "#8f8fbc", "font": {"color": "white"}, "id": "Rebecca Holloway", "label": "Rebecca Holloway", "shape": "dot", "title": "Rebecca Holloway\n\nRelationships: \nLucy Quinn"}, {"color": "#8f8fbc", "font": {"color": "white"}, "id": "Mona Lohmann", "label": "Mona Lohmann", "shape": "dot", "title": "Mona Lohmann\n\nRelationships: \nDiane Caldwell"}, {"color": "#8f8fbc", "font": {"color": "white"}, "id": "Carrie Lawrence", "label": "Carrie Lawrence", "shape": "dot", "title": "Carrie Lawrence\n\nRelationships: \nMarta Vieira da Silva"}, {"color": "#8f8fbc", "font": {"color": "white"}, "id": "Lisa Lantz", "label": "Lisa Lantz", "shape": "dot", "title": "Lisa Lantz\n\nRelationships: \nLina Hurtig"}, {"color": "#8f8fbc", "font": {"color": "white"}, "id": "Leah Williamson", "label": "Leah Williamson", "shape": "dot", "title": "Leah Williamson\n\nRelationships: \nJordan Nobbs"}]);
+                  edges = new vis.DataSet([{"color": "#0fbd66", "from": "Sam Kerr", "to": "Kristie Mewis", "weight": 500}, {"color": "#0fbd66", "from": "Pernille Harder", "to": "Magdelena Eriksson", "weight": 500}, {"color": "#0fbd66", "from": "Ann-Katrin Berger ", "to": "Jess Carter", "weight": 500}, {"color": "#0fbd66", "from": "Ellie Carpenter", "to": "Danielle van de Donk", "weight": 500}, {"color": "#0fbd66", "from": "Ali Krieger", "to": "Ashlyn Harris", "weight": 500}, {"color": "#0fbd66", "from": "Vivianne Miedema", "to": "Beth Mead", "weight": 500}, {"color": "#0fbd66", "from": "Katie Macabe", "to": "Caitlin Foord", "weight": 500}, {"color": "#0fbd66", "from": "Toni Pressley", "to": "Marta Vieira da Silva", "weight": 500}, {"color": "#0fbd66", "from": "Marta Vieira da Silva", "to": "Carrie Lawrence", "weight": 500}, {"color": "#0fbd66", "from": "Millie Turner\u00a0", "to": "Rachel Daly\u00a0", "weight": 500}, {"color": "#0fbd66", "from": "Stephanie Williams", "to": "Bethany England", "weight": 500}, {"color": "#0fbd66", "from": "Lauren Hemp", "to": "Ellie Butler", "weight": 500}, {"color": "#0fbd66", "from": "D\u00e9bora Cristiane de Oliveira\u00a0", "to": "Meredith Speck", "weight": 500}, {"color": "#0fbd66", "from": "Jordan Nobbs", "to": "Leah Williamson", "weight": 500}, {"color": "#0fbd66", "from": "Keira Walsh", "to": "Lucy Bronze", "weight": 500}, {"color": "#0fbd66", "from": "Ingrid Engen ", "to": "Mar\u00eda Pilar Le\u00f3n", "weight": 500}, {"color": "#0fbd66", "from": "Tamika Yallup", "to": "Kirsty Yallop", "weight": 500}, {"color": "#0fbd66", "from": "Clara Markstedt", "to": "Katrina Gorry", "weight": 500}, {"color": "#0fbd66", "from": "Lucy Quinn", "to": "Rebecca Holloway", "weight": 500}, {"color": "#0fbd66", "from": "Diane Caldwell", "to": "Mona Lohmann", "weight": 500}, {"color": "#0fbd66", "from": "Lina Hurtig", "to": "Lisa Lantz", "weight": 500}, {"color": "#0fbd66", "from": "Jill Roord", "to": "Sydney Lohmann", "weight": 500}, {"color": "#5c7066", "from": "Sam Kerr", "to": "Nikki Stanton", "weight": 1}, {"color": "#5c7066", "from": "Vivianne Miedema", "to": "Lisa Evans", "weight": 1}, {"color": "#5c7066", "from": "Beth Mead", "to": "Danielle van de Donk", "weight": 1}, {"color": "#5c7066", "from": "Katie Macabe", "to": "Ruesha Littlejohn", "weight": 1}, {"color": "#5c7066", "from": "Caitlin Foord", "to": "Lia W\u00e4lti", "weight": 1}, {"color": "#5c7066", "from": "Rachel Daly\u00a0", "to": "Kristie Mewis", "weight": 1}, {"color": "#5c7066", "from": "Ingrid Engen ", "to": "Marie D\u00f8lvik Markussen", "weight": 1}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": true
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+                  // if this network requires displaying the configure window,
+                  // put it in its div
+                  options.configure["container"] = document.getElementById("config");
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
